@@ -1,10 +1,11 @@
 export interface UseChatReturnData {
-    sendMessage: (message: string) => void;
+    sendMessage: (message: string) => Promise<unknown>;
 }
 
 export function useChat(): UseChatReturnData {
-    const sendMessage = (message: string) => {
-        console.log(message);
+    const sendMessage = async (message: string) => {
+        // Boilerplate for API call
+        return new Promise(resolve => setTimeout(resolve, 1000));
     }
 
     return {
