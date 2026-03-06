@@ -33,6 +33,7 @@ export function MessageInput() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type a message..."
+                disabled={isSending}
             />
             <Button onClick={handleSendMessage} className="hover:cursor-pointer" disabled={canSend()}>
                 {isSending ? <Spinner /> : <SendIcon />}
