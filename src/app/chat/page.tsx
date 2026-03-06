@@ -1,11 +1,11 @@
-import { MessageChat, MessageInput } from "@/features/chat";
+import { MessageList, MessageInput } from "@/features/chat";
 
 export default function ChatScreen() {
   return (
     <main className="flex h-screen w-full flex-col items-center justify-start gap-4 bg-background p-4">
       <h1 className="text-2xl font-bold">Chat Screen</h1>
       <section className="flex flex-col gap-2 w-full h-full justify-between p-4">
-        <MessageChat />
+        <MessageList />
         <MessageInput />
       </section>
     </main>
