@@ -1,6 +1,6 @@
 import { Separator } from "@/shared/components/ui/separator";
 
-import { CreateUserForm } from "./_components/create-user-form";
+import { RegistrationForm } from "./_components/registration-form";
 import { Suspense } from "react";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
@@ -15,7 +15,7 @@ export default function NewMemberPage() {
                 <Separator orientation="vertical" className="h-full" />
             </div>
             <Suspense fallback={<Skeleton className="w-full h-10" />}>
-                <CreateUserForm />
+                <RegistrationForm />
             </Suspense>
         </div>
     )

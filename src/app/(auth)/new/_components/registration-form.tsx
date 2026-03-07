@@ -27,7 +27,7 @@ function SubmitButton() {
 }
 
 
-export function CreateUserForm() {
+export function RegistrationForm() {
     const [state, formAction] = useActionState(createUserAction, INITIAL_STATE);
 
     const {
