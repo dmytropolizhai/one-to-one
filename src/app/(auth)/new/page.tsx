@@ -11,7 +11,7 @@ export default function NewMemberPage() {
                 <h1 className="text-3xl font-bold">Become a new member</h1>
                 <p className="text-muted-foreground">Enter your nickname to create an account</p>
             </header>
-            <div className="h-10">
+            <div className="h-20">
                 <Separator orientation="vertical" className="h-full" />
             </div>
             <Suspense fallback={<Skeleton className="w-full h-10" />}>
