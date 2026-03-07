@@ -3,7 +3,7 @@
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { SendIcon } from "lucide-react";
-import { useChat } from "../hooks/use-chat";
+import { useChat } from "../_hooks/use-chat";
 import { useState } from "react";
 import { Spinner } from "@/shared/components/ui/spinner";
 

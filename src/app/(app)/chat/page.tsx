@@ -1,4 +1,5 @@
-import { MessageList, MessageInput } from "@/features/chat";
+import { MessageInput } from "./_components/message-input";
+import { MessageList } from "./components/message-list";
 
 export default function ChatScreen() {
   return (
