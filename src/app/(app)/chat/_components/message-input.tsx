@@ -3,26 +3,22 @@
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { SendIcon } from "lucide-react";
-import { useChat } from "../_hooks/use-chat";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Spinner } from "@/shared/components/ui/spinner";
+import { sendMessage } from "@/data/messages/actions";
 
 export function MessageInput() {
-    const [message, setMessage] = useState<string>("");
-    const [isSending, setIsSending] = useState<boolean>(false);
+    const [message, setMessage] = useState("");
+    const [isPending, startTransition] = useTransition();
 
-    /**
-     * Checks if the message can be sent.
-     * @returns True if the message can be sent, false otherwise.
-     */
-    const canSend = (): boolean => isSending || !message.trim();
-
-    const { sendMessage } = useChat();
+    const canSend = isPending || !message.trim();
 
     function handleSendMessage() {
-        setIsSending(true);
-        sendMessage(message).then(() => {
-            setIsSending(false);
+        const value = message.trim();
+        if (!value) return;
+
+        startTransition(async () => {
+            await sendMessage(value);
             setMessage("");
         });
     }
@@ -33,11 +29,17 @@ export function MessageInput() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type a message..."
-                disabled={isSending}
+                disabled={isPending}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter" && !canSend) {
+                        e.preventDefault();
+                        handleSendMessage();
+                    }
+                }}
             />
-            <Button onClick={handleSendMessage} className="hover:cursor-pointer" disabled={canSend()}>
-                {isSending ? <Spinner /> : <SendIcon />}
+            <Button type="button" disabled={canSend} onClick={handleSendMessage}>
+                {isPending ? <Spinner /> : <SendIcon />}
             </Button>
         </div>
-    )
+    );
 }

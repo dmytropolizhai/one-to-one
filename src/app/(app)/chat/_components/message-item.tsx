@@ -1,22 +1,18 @@
-import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle, ItemProps } from "@/shared/components/ui/item";
-import { Message as MessageType } from "../types";
+import { Item, ItemContent, ItemDescription, ItemTitle, ItemProps } from "@/shared/components/ui/item";
 
-export type MessageProps = MessageType & ItemProps
+export type MessageProps = ItemProps & {
+    id: string | number;
+    content: string;
+    createdAt: Date;
+    isMe?: boolean;
+}
 
-/**
- * @param content - The content of the message.
- * @param sender - The sender of the message.
- * @param timestamp - The timestamp of the message.
- * @returns The message component.
- */
-export function MessageItem({ id, content, sender, timestamp, ...rest }: MessageProps) {
-    const isMe = sender === "me";
-
+export function MessageItem({ id, content, createdAt, isMe, ...rest }: MessageProps) {
     return (
-        <Item variant={isMe ? "muted" : "outline"} id={id} {...rest}>
+        <Item variant={isMe ? "muted" : "outline"} id={id.toString()} {...rest}>
             <ItemContent>
                 <ItemTitle>{content}</ItemTitle>
-                <ItemDescription>{timestamp.toLocaleTimeString()}</ItemDescription>
+                <ItemDescription>{new Date(createdAt).toLocaleTimeString()}</ItemDescription>
             </ItemContent>
         </Item>
     );
