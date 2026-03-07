@@ -1,6 +1,4 @@
-import { Message } from "../types";
-
-export function getMessages(): Message[] {
+export function getMessages(): { id: string, content: string, sender: string, timestamp: Date }[] {
     return [
         {
             id: "1",

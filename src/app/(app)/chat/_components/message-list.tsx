@@ -1,5 +1,5 @@
+import { getMessages } from "@/data/messages/actions";
 import { MessageItem } from "./message-item";
-import { getMessages } from "../data/messages";
 
 
 export function MessageList() {
