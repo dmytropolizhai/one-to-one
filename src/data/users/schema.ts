@@ -1,30 +1,8 @@
-"use server"
+import { z } from "zod";
 
-import { createUserSchema, CreateUserData } from "@/data/users/actions";
+export const createUserSchema = z.object({
+    name: z.string().min(3, "Name is too short").max(20, "Name is too long"),
+    email: z.string().email("Invalid email"),
+});
 
-export type CreateUserState = {
-    success: boolean;
-    errors?: Partial<Record<keyof CreateUserData, string[]>>;
-    message?: string;
-};
-
-export async function createUserAction(
-    _prev: CreateUserState,
-    formData: FormData
-): Promise<CreateUserState> {
-    const raw = Object.fromEntries(formData.entries());
-
-    const parsed = createUserSchema.safeParse(raw);
-
-    if (!parsed.success) {
-        return {
-            success: false,
-            errors: parsed.error.flatten().fieldErrors,
-        };
-    }
-
-    // TODO: persist user
-    await new Promise((res) => setTimeout(res, 1000));
-
-    return { success: true, message: "User created successfully." };
-}
+export type CreateUserData = z.infer<typeof createUserSchema>;
