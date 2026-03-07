@@ -7,11 +7,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/shared/components/ui/input";
 import { Field, FieldDescription, FieldError, FieldLabel } from "@/shared/components/ui/field";
 import { Card, CardContent, CardFooter } from "@/shared/components/ui/card";
-import { CreateUserData, createUserSchema } from "@/data/users/actions";
-import { CreateUserState, createUserAction } from "@/data/users/schema";
+import { CreateUserData, createUserSchema } from "@/data/users/schema";
+import { CreateUserState, createUserAction } from "@/data/users/actions";
 import { Button } from "@/shared/components/ui/button";
 import { toast } from "sonner";
 import { useFormStatus } from "react-dom";
+import { redirect } from "next/navigation";
 
 const INITIAL_STATE: CreateUserState = { success: false };
 
@@ -19,11 +20,12 @@ function SubmitButton() {
     const { pending } = useFormStatus()
 
     return (
-        <Button className="w-full" type="submit" disabled={pending}>
+        <Button type="submit" disabled={pending}>
             {pending ? "Creating..." : "Create"}
         </Button>
     )
 }
+
 
 export function CreateUserForm() {
     const [state, formAction] = useActionState(createUserAction, INITIAL_STATE);
@@ -35,19 +37,19 @@ export function CreateUserForm() {
         reset
     } = useForm<CreateUserData>({
         resolver: zodResolver(createUserSchema),
-        defaultValues: { nickname: "" },
+        defaultValues: { name: "", email: "" },
     });
 
     useEffect(() => {
         if (state.success) {
             toast.success(state.message ?? "User created successfully.");
-            reset();
-            return;
+            redirect("/chat")
         }
 
-        if (!state.errors) return;
-
-        toast.error("Please fix the errors below.");
+        if (!state.errors) {
+            toast.error(state.message ?? "Something went wrong");
+            return;
+        };
 
         for (const [field, messages] of Object.entries(state.errors)) {
             setError(field as keyof CreateUserData, {
@@ -64,26 +66,43 @@ export function CreateUserForm() {
             className="flex flex-col gap-8 justify-start items-center"
         >
             <Card>
-                <CardContent>
-                    <Field data-invalid={!!errors.nickname}>
-                        <FieldLabel htmlFor="nickname">Nickname</FieldLabel>
+                <CardContent className="flex flex-col gap-4">
+                    <Field>
+                        <FieldLabel htmlFor="email">Email</FieldLabel>
                         <Input
-                            {...register("nickname")}
-                            id="nickname"
-                            placeholder="Enter your nickname"
-                            aria-invalid={!!errors.nickname}
+                            {...register("email")}
+                            id="email"
+                            placeholder="Enter your email"
+                            aria-invalid={!!errors.email}
                         />
                         <FieldDescription>
-                            Enter your nickname. Must be unique
+                            Enter your email. Must be unique
                         </FieldDescription>
-                        {errors.nickname && (
-                            <FieldError errors={[errors.nickname]} />
+                        {errors.email && (
+                            <FieldError errors={[errors.email]} />
+                        )}
+                    </Field>
+                    <Field data-invalid={!!errors.name}>
+                        <FieldLabel htmlFor="name">Name</FieldLabel>
+                        <Input
+                            {...register("name")}
+                            id="name"
+                            placeholder="Enter your name"
+                            aria-invalid={!!errors.name}
+                        />
+                        <FieldDescription>
+                            Enter your name. Must be unique
+                        </FieldDescription>
+                        {errors.name && (
+                            <FieldError errors={[errors.name]} />
                         )}
                     </Field>
                 </CardContent>
 
                 <CardFooter>
-                    <SubmitButton />
+                    <Field orientation="horizontal">
+                        <SubmitButton />
+                    </Field>
                 </CardFooter>
             </Card>
         </Form>
