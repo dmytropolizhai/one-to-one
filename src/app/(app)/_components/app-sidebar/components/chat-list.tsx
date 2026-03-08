@@ -1,11 +1,12 @@
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuAction, SidebarMenuBadge } from "@/shared/components/ui/sidebar"
-import { MoreHorizontal } from "lucide-react"
+import { cn } from "@/shared/lib/utils"
 
 type Chat = {
     id: string,
     name: string,
     lastMessage: string,
     initial: string,
+    isSelected: boolean
 }
 
 export function ChatList({ chats }: { chats: Chat[] }) {
@@ -15,7 +16,7 @@ export function ChatList({ chats }: { chats: Chat[] }) {
                 <SidebarMenuItem key={chat.id}>
                     <SidebarMenuButton
                         tooltip={chat.name}
-                        className="h-[68px] px-4 hover:bg-sidebar-accent/50 transition-all duration-200 group relative"
+                        className={cn("h-[68px] px-4 transition-all duration-200 group relative", chat.isSelected && "bg-primary/10")}
                     >
                         <div className="relative shrink-0">
                             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-primary/10 to-primary/30 text-primary border border-primary/20 font-bold text-base shadow-xs">
