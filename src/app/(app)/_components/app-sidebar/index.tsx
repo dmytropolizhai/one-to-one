@@ -8,7 +8,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/shared/components/ui/sidebar"
-import { RecentChannels } from "./recent-channels"
+import { RecentChats } from "./recent-chats"
 import { getChats } from "@/data/chats/actions"
 import { getMe } from "@/data/users/actions"
 import { ChatList } from "./chat-list"
@@ -39,7 +39,7 @@ export async function AppSidebar() {
                             className="w-full bg-sidebar-accent/30 border border-sidebar-border/50 rounded-full py-2 pl-9 pr-3 text-[13px] outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all"
                         />
                     </div> */}
-                    <RecentChannels />
+                    <RecentChats />
 
                     <SidebarGroupContent>
                         <SidebarMenu>
