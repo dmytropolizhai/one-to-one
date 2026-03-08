@@ -14,12 +14,14 @@ datasource db {
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  name  String
+  id       Int    @id @default(autoincrement())
+  publicId String @unique @default(uuid())
+  email    String @unique
+  name     String
 
-  messages  Message[]
-  chatLinks ChatParticipant[]
+  createdChats     Chat[]            @relation("ChatCreator")
+  chatParticipants ChatParticipant[]
+  messages         Message[]
 }
 
 model Chat {
@@ -27,14 +29,18 @@ model Chat {
   publicId     String   @unique @default(uuid())
   createdAt    DateTime @default(now())
   passwordHash String?
-  isProtected  Boolean  @default(false)
 
   messages     Message[]
   participants ChatParticipant[]
 
-  @@index([publicId])
+  creator   User? @relation("ChatCreator", fields: [creatorId], references: [id])
+  creatorId Int?
+
+  @@index([creatorId])
 }
 
+/// Join table representing chat membership.
+/// A record indicates that a user participates in a chat.
 model ChatParticipant {
   chatId   Int
   userId   Int

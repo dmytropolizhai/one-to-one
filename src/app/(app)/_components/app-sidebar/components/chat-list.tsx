@@ -11,6 +11,7 @@ type Chat = {
     name: string,
     lastMessage: string,
     initial: string,
+    isSelected: boolean
 }
 
 export function ChatList({ chats }: { chats: Chat[] }) {
@@ -38,15 +39,13 @@ export function ChatList({ chats }: { chats: Chat[] }) {
                                     )}>
                                         {chat.initial}
                                     </div>
-                                    {index % 3 === 0 && (
-                                        <div className="absolute -right-0.5 -bottom-0.5 h-3.5 w-3.5 rounded-full border-2 border-sidebar bg-green-500 shadow-sm" />
-                                    )}
+                                     {/* TODO: Make online status */}
                                 </div>
                                 <div className="flex flex-1 flex-col overflow-hidden text-left ml-3">
                                     <div className="flex items-center justify-between">
                                 <span className="truncate font-bold text-[14px] text-foreground/90 leading-tight">{chat.name}</span>
                                         <span className="text-[10px] text-muted-foreground/50 font-medium shrink-0 ml-2">
-                                            {index === 0 ? "12:45" : index === 1 ? "Yesterday" : "2 days"}
+                                            {{/* TODO: Last message date/time */}
                                         </span>
                                     </div>
                                     <span className={cn(
@@ -58,14 +57,8 @@ export function ChatList({ chats }: { chats: Chat[] }) {
                                 </div>
                             </Link>
                         </SidebarMenuButton>
-                        <SidebarMenuAction className="right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity translate-x-1 group-hover:translate-x-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                        </SidebarMenuAction>
-                        {index === 0 && (
-                            <SidebarMenuBadge className="right-10 top-[22px] bg-primary text-primary-foreground size-5 rounded-full border-2 border-sidebar flex items-center justify-center text-[10px] font-bold shadow-sm">
-                                2
-                            </SidebarMenuBadge>
-                        )}
+                    {/* TODO: Make horizontal button to delete chat and implement swipe to do (in this case: delete) */}
+                    {/* TODO: Unseen message count */}
                     </SidebarMenuItem>
                 );
             })}

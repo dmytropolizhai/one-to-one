@@ -8,7 +8,7 @@ import {
     SidebarMenuItem,
 } from "@/shared/components/ui/sidebar"
 import { RecentChats } from "./components/recent-chats"
-import { getChats } from "@/data/chats/actions"
+import { getChats, getCurrentChat } from "@/data/chats/actions"
 import { getMe } from "@/data/users/actions"
 import { ChatList } from "./components/chat-list"
 import { MyPublicId } from "./components/my-public-id"
@@ -17,9 +17,18 @@ import { SidebarSearch } from "./components/sidebar-search"
 import { SidebarUser } from "./components/sidebar-user"
 
 export async function AppSidebar() {
-    const [me, chats] = await Promise.all([getMe(), getChats()])
+    const [me, rawChats, currentChat] = await Promise.all([
+        getMe(),
+        getChats(),
+        getCurrentChat()
+    ])
 
     if (!me) return null;
+
+    const chats = rawChats.map(chat => ({
+        ...chat,
+        isSelected: chat.id === currentChat?.id,
+    }))
 
     return (
         <Sidebar variant="sidebar" collapsible="icon">

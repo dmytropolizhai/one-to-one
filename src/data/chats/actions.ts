@@ -1,5 +1,11 @@
+"use server"
+
 import { prisma } from "@/shared/lib/prisma";
 import { getMe } from "../users/actions";
+import { connectUserSchema, ConnectUserData } from "./schema";
+import { ActionState } from "@/data/types";
+
+export type ConnectUserState = ActionState<ConnectUserData>;
 
 export async function getChats() {
     const me = await getMe();
@@ -91,6 +97,73 @@ export async function getCurrentChat() {
                 }
             });
         }
+    }
+}
+
+async function connectWithUser(publicId: string) {
+    const me = await getMe();
+    if (!me) throw new Error("Unauthorized");
+
+    if (me.publicId === publicId) {
+        throw new Error("You cannot connect with yourself");
+    }
+
+    const targetUser = await prisma.user.findUnique({
+        where: { publicId }
+    });
+
+    if (!targetUser) {
+        throw new Error("User with this ID does not exist");
+    }
+
+    // Check if chat already exists
+    const existingChat = await prisma.chat.findFirst({
+        where: {
+            AND: [
+                { participants: { some: { userId: me.id } } },
+                { participants: { some: { userId: targetUser.id } } }
+            ]
+        }
+    });
+
+    if (existingChat) {
+        throw new Error("Chat already exist")
+    }
+
+    // Create new chat
+    const newChat = await prisma.chat.create({
+        data: {
+            participants: {
+                create: [
+                    { userId: me.id },
+                    { userId: targetUser.id }
+                ]
+            }
+        }
+    });
+
+    return newChat.publicId;
+}
+
+export async function connectWithUserAction(
+    _prev: ConnectUserState,
+    formData: FormData
+): Promise<ConnectUserState> {
+    const raw = Object.fromEntries(formData.entries());
+    const parsed = connectUserSchema.safeParse(raw);
+
+    if (!parsed.success) {
+        return {
+            success: false,
+            errors: parsed.error.flatten().fieldErrors,
+        };
+    }
+
+    try {
+        await connectWithUser(parsed.data.publicId);
+        return { success: true, message: "Connected successfully." };
+    } catch (error: any) {
+        return { success: false, message: error.message || "Failed to connect." };
     }
 }
 
