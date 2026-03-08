@@ -28,9 +28,9 @@ export function ConnectWithUserDialog() {
                         />
                     </div>
                 </div>
-                <DialogFooter className="flex justify-end gap-3 font-semibold">
+                <DialogFooter className="flex justify-end gap-4">
                     <DialogClose asChild>
-                        <Button variant="ghost" className="rounded-xl px-6">Close</Button>
+                        <Button variant="ghost">Close</Button>
                     </DialogClose>
                     <Button>Send Request</Button>
                 </DialogFooter>
