@@ -1,12 +1,18 @@
 import { getMe } from "@/data/users/actions";
 import { ChatMessageList } from "./chat-message-list";
-import { getCurrentChat } from "@/data/chats/actions";
+import { getChat } from "@/data/chats/actions";
 
-export async function ChatMessagesView() {
-    const chat = await getCurrentChat();
+interface ChatMessagesViewProps {
+    chatId?: string;
+}
+
+export async function ChatMessagesView({ chatId }: ChatMessagesViewProps) {
+    if (!chatId) return null;
+
+    const chat = await getChat(chatId);
     const me = await getMe();
 
-    if (!chat) {
+    if (!chat || !chat.isParticipant) {
         return (
             <div className="flex flex-1 items-center justify-center text-muted-foreground">
                 No active chat found.

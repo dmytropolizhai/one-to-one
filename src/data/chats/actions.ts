@@ -93,3 +93,43 @@ export async function getCurrentChat() {
         }
     }
 }
+
+export async function getChat(chatId: string) {
+    const me = await getMe();
+    if (!me) return null;
+
+    const chat = await prisma.chat.findUnique({
+        where: {
+            publicId: chatId
+        },
+        include: {
+            participants: {
+                include: {
+                    user: true
+                }
+            }
+        }
+    });
+
+    if (!chat) return null;
+
+    const isParticipant = chat.participants.some(p => p.userId === me.id);
+    const otherParticipant = chat.participants.find(p => p.userId !== me.id)?.user;
+
+    return {
+        ...chat,
+        isParticipant,
+        otherUser: otherParticipant,
+        getMessages: async () => {
+            if (!isParticipant) return [];
+            return await prisma.message.findMany({
+                where: {
+                    chatId: chat.id
+                },
+                orderBy: {
+                    createdAt: 'asc'
+                }
+            });
+        }
+    }
+}

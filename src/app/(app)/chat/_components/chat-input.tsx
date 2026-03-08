@@ -8,7 +8,10 @@ import { Spinner } from "@/shared/components/ui/spinner";
 import { sendMessage } from "@/data/messages/actions";
 import { cn } from "@/shared/lib/utils";
 
+import { useParams } from "next/navigation";
+
 export function ChatInput() {
+    const { chatId } = useParams() as { chatId: string };
     const [message, setMessage] = useState("");
     const [isPending, startTransition] = useTransition();
 
@@ -16,10 +19,10 @@ export function ChatInput() {
 
     function handleSendMessage() {
         const value = message.trim();
-        if (!value) return;
+        if (!value || !chatId) return;
 
         startTransition(async () => {
-            await sendMessage(value);
+            await sendMessage(value, chatId);
             setMessage("");
         });
     }

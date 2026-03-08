@@ -21,24 +21,31 @@ export async function getMessages() {
     }
 }
 
-export async function sendMessage(content: string) {
+export async function sendMessage(content: string, chatPublicId: string) {
     try {
         const user = await getMe();
-        const chat = await getCurrentChat();
-
         if (!user) {
             throw new Error("Unauthorized");
         }
 
+        const chat = await prisma.chat.findFirst({
+            where: {
+                publicId: chatPublicId,
+                participants: {
+                    some: { userId: user.id }
+                }
+            }
+        });
+
         if (!chat) {
-            throw new Error("Chat not found");
+            throw new Error("Chat not found or access denied");
         }
 
         const message = await prisma.message.create({
             data: {
                 content,
                 userId: user.id,
-                chatId: chat.databaseId,
+                chatId: chat.id,
             },
         });
 
