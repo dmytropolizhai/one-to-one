@@ -35,9 +35,7 @@ export function ChatList({ chats }: { chats: Chat[] }) {
                             </span>
                         </div>
                     </SidebarMenuButton>
-                    <SidebarMenuAction className="right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity translate-x-1 group-hover:translate-x-0">
-                        <MoreHorizontal className="h-4 w-4" />
-                    </SidebarMenuAction>
+                    {/* TODO: Make horizontal button to delete chat and implement swipe to do (in this case: delete) */}
                     {/* TODO: Unseen message count */}
                 </SidebarMenuItem>
             ))}
