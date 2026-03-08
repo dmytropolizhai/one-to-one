@@ -1,6 +1,5 @@
 import { getMe } from "@/data/users/actions";
 import { CopyButton } from "@/shared/components/buttons/copy-button";
-import { IdCard } from "lucide-react";
 
 export async function MyPublicId() {
     const me = await getMe();
