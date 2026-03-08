@@ -39,13 +39,13 @@ export function ChatList({ chats }: { chats: Chat[] }) {
                                     )}>
                                         {chat.initial}
                                     </div>
-                                     {/* TODO: Make online status */}
+                                    {/* TODO: Make online status */}
                                 </div>
                                 <div className="flex flex-1 flex-col overflow-hidden text-left ml-3">
                                     <div className="flex items-center justify-between">
-                                <span className="truncate font-bold text-[14px] text-foreground/90 leading-tight">{chat.name}</span>
+                                        <span className="truncate font-bold text-[14px] text-foreground/90 leading-tight">{chat.name}</span>
                                         <span className="text-[10px] text-muted-foreground/50 font-medium shrink-0 ml-2">
-                                            {{/* TODO: Last message date/time */}
+                                            {/* TODO: Last message date/time */}
                                         </span>
                                     </div>
                                     <span className={cn(
@@ -57,8 +57,8 @@ export function ChatList({ chats }: { chats: Chat[] }) {
                                 </div>
                             </Link>
                         </SidebarMenuButton>
-                    {/* TODO: Make horizontal button to delete chat and implement swipe to do (in this case: delete) */}
-                    {/* TODO: Unseen message count */}
+                        {/* TODO: Make horizontal button to delete chat and implement swipe to do (in this case: delete) */}
+                        {/* TODO: Unseen message count */}
                     </SidebarMenuItem>
                 );
             })}
