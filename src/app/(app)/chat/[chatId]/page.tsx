@@ -1,4 +1,4 @@
-import { getChat } from "@/data/chats/actions";
+import { connectWithUserAction, getChat } from "@/data/chats/actions";
 import { ChatInput } from "../_components/chat-input";
 import { ChatMessagesView } from "../_components/chat-messages-view";
 import { Suspense } from "react";
@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 import { Button } from "@/shared/components/ui/button";
 import { UserPlus } from "lucide-react";
 import { Spinner } from "@/shared/components/ui/spinner";
+
+import Form from "next/form";
 
 export default async function DynamicChatPage({
     params,
@@ -32,9 +34,12 @@ export default async function DynamicChatPage({
                             You are not a member of this chat. Would you like to request access or connect with <span className="text-foreground font-semibold">{chat.otherUser?.name || "this user"}</span>?
                         </p>
                     </div>
-                    <Button className="w-full h-12 text-base font-semibold rounded-xl">
-                        Send Connection Request
-                    </Button>
+                    <Form action={connectWithUserAction.bind(null, { success: false }) as any}>
+                        <input type="hidden" name="publicId" value={chat.otherUser?.publicId || ""} />
+                        <Button type="submit" className="w-full h-12 text-base font-semibold rounded-xl">
+                            Send Connection Request
+                        </Button>
+                    </Form>
                 </div>
             </main>
         );
