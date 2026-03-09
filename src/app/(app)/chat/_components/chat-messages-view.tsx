@@ -12,6 +12,8 @@ export async function ChatMessagesView({ chatId }: ChatMessagesViewProps) {
     const chat = await getChat(chatId);
     const me = await getMe();
 
+    if (!me) return null;
+
     if (!chat || !chat.isParticipant) {
         return (
             <div className="flex flex-1 items-center justify-center text-muted-foreground">
@@ -20,11 +22,15 @@ export async function ChatMessagesView({ chatId }: ChatMessagesViewProps) {
         )
     }
 
-    if (!me) return null;
-
     const messages = await chat.getMessages();
 
     return (
-        <ChatMessageList messages={messages} meId={me.id} />
+        <ChatMessageList
+            messages={messages}
+            meId={me.id}
+            chatId={chatId}
+        />
     )
 }
+
+

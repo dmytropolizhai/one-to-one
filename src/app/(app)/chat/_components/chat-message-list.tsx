@@ -1,16 +1,47 @@
 "use client"
 
 import { Message } from "@/generated/prisma/client";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ChatMessageItem } from "./chat-message-item";
+import { useSocket, useSocketEvent } from "@/websocket/hooks/use-socket";
 
 type ChatMessageListProps = {
     messages: Message[];
     meId: string | number;
+    chatId: string;
 }
 
-export function ChatMessageList({ messages, meId }: ChatMessageListProps) {
+export function ChatMessageList({
+    messages: initialMessages,
+    meId,
+    chatId
+}: ChatMessageListProps) {
+    const [messages, setMessages] = useState<Message[]>(initialMessages);
     const bottomRef = useRef<HTMLDivElement>(null);
+    const { socket, connected } = useSocket();
+
+    useEffect(() => {
+        if (!socket || !chatId || !connected) return;
+
+        socket.emit("joinChat", chatId);
+
+        return () => {
+            socket.emit("leaveChat", chatId);
+        }
+    }, [socket, chatId, connected]);
+
+    const onMessage = useCallback((payload: { chatId: string; message: Message }) => {
+        if (payload.chatId === chatId) {
+            setMessages((prev) => {
+                if (prev.some(m => m.id === payload.message.id)) return prev;
+                return [...prev, payload.message];
+            });
+        }
+    }, [chatId]);
+
+    useSocketEvent("message", onMessage);
+
+
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
