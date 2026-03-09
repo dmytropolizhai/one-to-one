@@ -20,7 +20,9 @@ export function ChatList({ chats }: { chats: Chat[] }) {
     return (
         <SidebarMenu className="gap-1">
             {chats.map((chat, index) => {
-                const isActive = pathname === `/chat/${chat.id}`;
+                const href = `/chat/${chat.id}`
+                const isActive = pathname === href;
+
                 return (
                     <SidebarMenuItem key={chat.id}>
                         <SidebarMenuButton
@@ -31,7 +33,11 @@ export function ChatList({ chats }: { chats: Chat[] }) {
                                 isActive ? "bg-sidebar-accent shadow-sm ring-1 ring-sidebar-border" : "hover:bg-sidebar-accent/50"
                             )}
                         >
-                            <Link href={`/chat/${chat.id}`}>
+                            <Link href={href} onClick={e => {
+                                if (isActive) {
+                                    e.preventDefault();
+                                }
+                            }}>
                                 <div className="relative shrink-0">
                                     <div className={cn(
                                         "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl font-bold text-base shadow-xs transition-colors",
