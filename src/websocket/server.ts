@@ -15,7 +15,30 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
     },
 });
 
-io.on("connection", (socket) => console.log("Client connected:", socket.id));
+io.on("connection", (socket) => {
+    console.log("Client connected:", socket.id);
+
+    socket.on("joinChat", (chatId) => {
+        socket.join(chatId);
+        console.log(`Socket ${socket.id} joined room: ${chatId}`);
+    });
+
+    socket.on("leaveChat", (chatId) => {
+        socket.leave(chatId);
+        console.log(`Socket ${socket.id} left room: ${chatId}`);
+    });
+
+    socket.on("relayMessage", (payload) => {
+        io.to(payload.chatId).emit("message", payload);
+        console.log(`Relaying message ${payload.message.id} to room ${payload.chatId}`);
+    });
+
+
+
+    socket.on("disconnect", () => {
+        console.log("Client disconnected:", socket.id);
+    });
+});
 
 httpServer.listen(PORT, () => {
     console.log(`Socket.IO server running on http://localhost:${PORT}`);
