@@ -15,15 +15,8 @@ import { SidebarSearch } from "./components/sidebar-search"
 import { SidebarUser } from "./components/sidebar-user"
 
 export async function AppSidebar() {
-    const [me, rawChats, currentChat] = await Promise.all([
-        getMe(),
-        getChats(),
-        getCurrentChat()
-    ])
-
+    const me = await getMe();
     if (!me) return null;
-
-
 
     return (
         <Sidebar variant="sidebar" collapsible="icon">
