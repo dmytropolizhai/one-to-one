@@ -13,7 +13,7 @@ export function ChatList({ chats }: { chats: ClientChat[] }) {
     return (
         <SidebarMenu className="gap-1">
             {chats.map((chat, index) => {
-                const href = `/chat/${chat.id}`
+                const href = `/chat/${chat.publicId}`
                 const isActive = pathname === href;
 
                 return (
