@@ -2,12 +2,10 @@ import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
-    SidebarGroup,
     SidebarMenu,
     SidebarMenuItem,
 } from "@/shared/components/ui/sidebar"
 import { RecentChats } from "./components/recent-chats"
-import { getChats, getCurrentChat } from "@/data/chats/actions"
 import { getMe } from "@/data/users/actions"
 import { MyPublicId } from "./components/my-public-id"
 import { SidebarHeaderCustom } from "./components/sidebar-header-custom"
