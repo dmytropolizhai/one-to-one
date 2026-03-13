@@ -4,7 +4,7 @@ import { create } from "zustand";
 import { getMessages } from "./actions";
 import { useSocket, useSocketEvent } from "@/websocket/hooks/use-socket";
 import { Message } from "@/generated/prisma/client";
-import { useCurrentChat } from "@/data/chats/hooks/use-chats";
+import { useCurrentChat } from "@/data/chats/hooks";
 
 interface MessageState {
     messagesByChat: Record<string, Message[]>;
