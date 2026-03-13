@@ -1,9 +1,9 @@
-import { getChats } from "@/data/chats/actions";
+import { getClientChats } from "@/data/chats/actions";
 import { redirect } from "next/navigation";
 import { MessageSquarePlus } from "lucide-react";
 
 export default async function ChatPage() {
-  const chats = await getChats();
+  const chats = await getClientChats();
 
   if (chats.length > 0) {
     redirect(`/chat/${chats[0].id}`);

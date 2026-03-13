@@ -1,17 +1,17 @@
-"use server";
-
 import "server-only";
+
 import { prisma } from "@/shared/lib/prisma";
 import { getMe } from "@/data/users/actions";
-import { getCurrentChat } from "../chats/actions";
 
-export async function getMessages() {
+export async function getMessages(chatId: number) {
     try {
         const user = await getMe();
         if (!user) return [];
 
         return await prisma.message.findMany({
-            orderBy: {
+            where: {
+                chatId: chatId,
+            }, orderBy: {
                 createdAt: "asc",
             },
         });

@@ -2,14 +2,14 @@
 
 import { cn } from "@/shared/lib/utils";
 
-export type ChatMessageItemProps = {
+export type MessageItemProps = {
     id: string;
     content: string;
     createdAt: Date;
     isMe?: boolean;
 }
 
-export function ChatMessageItem({ id, content, createdAt, isMe }: ChatMessageItemProps) {
+export function MessageItem({ id, content, createdAt, isMe }: MessageItemProps) {
     return (
         <div
             data-id={id}

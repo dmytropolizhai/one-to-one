@@ -9,11 +9,14 @@ import { sendMessage } from "@/data/messages/actions";
 import { cn } from "@/shared/lib/utils";
 
 import { useParams } from "next/navigation";
+import { useSocket } from "@/websocket/hooks/use-socket";
+
 
 export function ChatInput() {
     const { chatId } = useParams() as { chatId: string };
     const [message, setMessage] = useState("");
     const [isPending, startTransition] = useTransition();
+    const { socket } = useSocket();
 
     const isSubmitDisabled = isPending || !message.trim();
 
@@ -22,10 +25,18 @@ export function ChatInput() {
         if (!value || !chatId) return;
 
         startTransition(async () => {
-            await sendMessage(value, chatId);
-            setMessage("");
+            const response = await sendMessage(value, chatId);
+            
+            if (response.success && response.message && socket) {
+                socket.emit("relayMessage", {
+                    chatId,
+                    message: response.message
+                });
+                setMessage("");
+            }
         });
     }
+
 
     return (
         <div className="w-full p-4 border-t bg-background/80 backdrop-blur-sm">

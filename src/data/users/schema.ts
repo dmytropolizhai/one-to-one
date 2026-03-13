@@ -6,3 +6,12 @@ export const createUserSchema = z.object({
 });
 
 export type CreateUserData = z.infer<typeof createUserSchema>;
+
+export const userSchema = z.object({
+    id: z.number(),
+    publicId: z.string(),
+    name: z.string().nullable(),
+    email: z.string(),
+});
+
+export type ClientUser = z.infer<typeof userSchema>;

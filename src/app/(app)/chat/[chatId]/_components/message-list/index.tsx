@@ -2,14 +2,21 @@
 
 import { Message } from "@/generated/prisma/client";
 import { useEffect, useRef } from "react";
-import { ChatMessageItem } from "./chat-message-item";
+import { MessageItem } from "./message-item";
+import { useMessages } from "@/data/messages/hooks";
 
 type ChatMessageListProps = {
     messages: Message[];
     meId: string | number;
+    chatId: string;
 }
 
-export function ChatMessageList({ messages, meId }: ChatMessageListProps) {
+export function MessageList({
+    messages: initialMessages,
+    meId,
+    chatId
+}: ChatMessageListProps) {
+    const messages = useMessages();
     const bottomRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -21,7 +28,7 @@ export function ChatMessageList({ messages, meId }: ChatMessageListProps) {
             {messages.map((msg) => {
                 const isMe = msg.userId === meId;
                 return (
-                    <ChatMessageItem
+                    <MessageItem
                         key={msg.id}
                         id={msg.id.toString()}
                         content={msg.content}
