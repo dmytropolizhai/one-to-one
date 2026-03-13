@@ -1,15 +1,10 @@
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu } from "@/shared/components/ui/sidebar";
 import { ConnectWithUserDialog } from "./connect-with-user-dialog";
 import { ChatList } from "./chat-list";
-import { getChats, getCurrentChat } from "@/data/chats/actions";
+import { getClientChats } from "@/data/chats/actions";
 
 export async function RecentChats() {
-    const rawChats = await getChats();
-    const currentChat = await getCurrentChat()
-    const chats = rawChats.map(chat => ({
-        ...chat,
-        isSelected: chat.id === currentChat?.id,
-    }))
+    const chats = await getClientChats();
 
     return (
         <SidebarGroup>

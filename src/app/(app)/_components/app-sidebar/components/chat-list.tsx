@@ -5,16 +5,9 @@ import { MoreHorizontal } from "lucide-react"
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/shared/lib/utils";
+import { ClientChat } from "@/data/chats/schema";
 
-type Chat = {
-    id: string,
-    name: string,
-    lastMessage: string,
-    initial: string,
-    isSelected: boolean
-}
-
-export function ChatList({ chats }: { chats: Chat[] }) {
+export function ChatList({ chats }: { chats: ClientChat[] }) {
     const pathname = usePathname();
 
     return (
