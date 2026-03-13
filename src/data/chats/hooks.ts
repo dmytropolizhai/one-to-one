@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { create } from "zustand";
 
-import { getClientChats } from "../actions";
-import { ClientChat } from "../schema";
+import { getClientChats } from "./actions";
+import { ClientChat } from "./schema";
 
 interface ChatState {
     chats: ClientChat[];
