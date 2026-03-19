@@ -68,3 +68,12 @@ model Message {
   @@index([chatId, createdAt])
   @@index([userId])
 }
+
+model OtpToken {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  codeHash  String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
