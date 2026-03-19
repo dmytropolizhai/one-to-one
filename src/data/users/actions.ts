@@ -68,7 +68,7 @@ export async function getMe() {
     }
 }
 
-export async function loginAction(
+export async function requestOtpAction(
     _prev: ActionState<{ email: string }>,
     formData: FormData
 ): Promise<ActionState<{ email: string }>> {
@@ -76,6 +76,38 @@ export async function loginAction(
 
     if (!email) {
         return { success: false, message: "Email is required." };
+    }
+
+    const user = await prisma.user.findUnique({
+        where: { email },
+    });
+
+    if (!user) {
+        return { success: false, message: "User not found." };
+    }
+
+    // TODO: Generate and send a real OTP to the user's email
+    // For now, we mock the OTP send
+    console.log(`[MOCK] OTP sent to ${email}`);
+
+    return { success: true, message: "OTP sent to your email." };
+}
+
+export async function verifyOtpAction(
+    _prev: ActionState<{ email: string; otp: string }>,
+    formData: FormData
+): Promise<ActionState<{ email: string; otp: string }>> {
+    const email = formData.get("email") as string;
+    const otp = formData.get("otp") as string;
+
+    if (!email || !otp) {
+        return { success: false, message: "Email and OTP are required." };
+    }
+
+    // TODO: Verify the real OTP against the stored/sent one
+    // For now, any 6-digit code is accepted as valid
+    if (otp.length !== 6) {
+        return { success: false, message: "Invalid OTP. Please enter the 6-digit code." };
     }
 
     const user = await prisma.user.findUnique({
