@@ -4,6 +4,8 @@ import { createUserSchema, CreateUserData } from "@/data/users/schema";
 import { prisma } from "@/shared/lib/prisma";
 import { cookies } from "next/headers";
 import { ActionState } from "@/data/types";
+import { generateOTP, hashOtp } from "@/shared/lib/otp";
+import { sendOtpEmail } from "@/shared/lib/email";
 
 export type CreateUserState = ActionState<CreateUserData>;
 
@@ -78,17 +80,26 @@ export async function requestOtpAction(
         return { success: false, message: "Email is required." };
     }
 
-    const user = await prisma.user.findUnique({
-        where: { email },
-    });
-
+    const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
         return { success: false, message: "User not found." };
     }
 
-    // TODO: Generate and send a real OTP to the user's email
-    // For now, we mock the OTP send
-    console.log(`[MOCK] OTP sent to ${email}`);
+    const code = generateOTP();
+    const codeHash = hashOtp(email, code);
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    await prisma.otpToken.upsert({
+        where: { email },
+        update: { codeHash, expiresAt },
+        create: { email, codeHash, expiresAt },
+    });
+
+    try {
+        await sendOtpEmail(email, code);
+    } catch {
+        return { success: false, message: "Failed to send OTP. Please try again." };
+    }
 
     return { success: true, message: "OTP sent to your email." };
 }
@@ -104,16 +115,26 @@ export async function verifyOtpAction(
         return { success: false, message: "Email and OTP are required." };
     }
 
-    // TODO: Verify the real OTP against the stored/sent one
-    // For now, any 6-digit code is accepted as valid
-    if (otp.length !== 6) {
-        return { success: false, message: "Invalid OTP. Please enter the 6-digit code." };
+    const token = await prisma.otpToken.findUnique({ where: { email } });
+
+    if (!token) {
+        return { success: false, message: "No OTP was requested for this email." };
     }
 
-    const user = await prisma.user.findUnique({
-        where: { email },
-    });
+    if (token.expiresAt < new Date()) {
+        await prisma.otpToken.delete({ where: { email } });
+        return { success: false, message: "OTP has expired. Please request a new one." };
+    }
 
+    const submittedHash = hashOtp(email, otp);
+    if (submittedHash !== token.codeHash) {
+        return { success: false, message: "Invalid OTP. Please try again." };
+    }
+
+    // OTP is valid — consume it and create the session
+    await prisma.otpToken.delete({ where: { email } });
+
+    const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
         return { success: false, message: "User not found." };
     }
