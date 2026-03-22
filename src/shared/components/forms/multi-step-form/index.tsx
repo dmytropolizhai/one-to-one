@@ -1,24 +1,15 @@
+
 "use client"
 
 import Form from "next/form";
 import { Card, CardContent, CardFooter } from "@/shared/components/ui/card";
 import { FieldGroup } from "@/shared/components/ui/field";
-
-/**
- * Concept is to avoid scattering `step === N` conditionals throughout JSX.
- * Instead, define each step as a separate object with:
- *   - renderFields: renders the form fields for this step
- *   - renderActions: renders the action button(s) for this step
- */
-export type Step<TContext> = {
-    renderFields: (ctx: TContext) => React.ReactNode;
-    renderActions: (ctx: TContext) => React.ReactNode;
-};
+import { Step } from "./types";
 
 /**
  * Props for MultiStepForm
  */
-type MultiStepFormProps<TContext> = {
+export type MultiStepFormProps<TContext> = {
     steps: Step<TContext>[];
     currentStep: number;
     transitioning: boolean;
@@ -72,3 +63,6 @@ export function MultiStepForm<TContext>({
         </Form>
     );
 }
+
+export type { Step } from "./types";
+export { useMultiStepForm } from "./hooks";
