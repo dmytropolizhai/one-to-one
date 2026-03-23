@@ -97,7 +97,8 @@ export async function requestOtpAction(
 
     try {
         await sendOtpEmail(email, code);
-    } catch {
+    } catch (error) {
+        console.error("Failed to send OTP:", error);
         return { success: false, message: "Failed to send OTP. Please try again." };
     }
 
