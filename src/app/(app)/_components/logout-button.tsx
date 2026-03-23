@@ -17,12 +17,12 @@ export function LogoutButton({ className, ...rest }: ButtonProps) {
     return (
         <Button
             variant="ghost"
-            size="icon-xs"
+            size="icon-sm"
             onClick={handleLogout}
             className={cn("ml-auto hover:text-destructive group/logout", className)}
             {...rest}
         >
-            <LogOut className="size-3.5 transition-colors group-hover/logout:text-destructive" />
+            <LogOut className="size-4 transition-colors group-hover/logout:text-destructive" />
         </Button>
     )
 }
