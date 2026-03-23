@@ -18,7 +18,7 @@ interface MessagePayload {
     message: Message;
 }
 
-const useMessageStore = create<MessageState>((set) => ({
+export const useMessageStore = create<MessageState>((set) => ({
     messagesByChat: {},
 
     setMessages: (chatId, messages) =>
@@ -61,15 +61,17 @@ const useMessageStore = create<MessageState>((set) => ({
  * - appending new socket messages
  * - deduplicating by message id
  */
-export function useMessages() {
+const EMPTY_ARRAY: Message[] = [];
+
+export function useMessages(explicitChatId?: number) {
     const currentChat = useCurrentChat();
-    const chatId = currentChat?.id;
+    const chatId = explicitChatId ?? currentChat?.id;
 
     const { socket, connected } = useSocket();
 
     const messages = useMessageStore(
         useCallback(
-            (state) => (chatId ? state.messagesByChat[chatId] ?? [] : []),
+            (state) => (chatId ? state.messagesByChat[chatId] ?? EMPTY_ARRAY : EMPTY_ARRAY),
             [chatId]
         )
     );
