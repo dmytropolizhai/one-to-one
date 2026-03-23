@@ -26,7 +26,6 @@ model User {
 
 model Chat {
   id           Int      @id @default(autoincrement())
-  publicId     String   @unique @default(uuid())
   createdAt    DateTime @default(now())
   passwordHash String?
 
