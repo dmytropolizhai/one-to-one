@@ -162,20 +162,22 @@ export function LoginForm() {
         setEmail(getValues("email"));
     }
 
+    async function resendOTP() {
+        const formData = new FormData();
+        formData.append("email", email);
+        startTransition(() => {
+            otpFormAction(formData);
+        });
+        setResendDisabled(true);
+    }
+
     const context: LoginStepContext = {
         email,
         emailError: errors.email,
         registerEmail: register,
         resendDisabled: resendDisabled,
         onContinue: handleContinue,
-        resendOTP: () => {
-            const formData = new FormData();
-            formData.append("email", email);
-            startTransition(() => {
-                otpFormAction(formData);
-            });
-            setResendDisabled(true);
-        },
+        resendOTP,
     };
 
     return (
