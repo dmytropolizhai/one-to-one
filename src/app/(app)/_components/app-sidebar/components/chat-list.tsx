@@ -1,7 +1,6 @@
 "use client";
 
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuAction, SidebarMenuBadge } from "@/shared/components/ui/sidebar"
-import { MoreHorizontal } from "lucide-react"
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/shared/components/ui/sidebar"
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/shared/lib/utils";
@@ -13,7 +12,7 @@ export function ChatList({ chats }: { chats: ClientChat[] }) {
     return (
         <SidebarMenu className="gap-1">
             {chats.map((chat, index) => {
-                const href = `/chat/${chat.publicId}`
+                const href = `/chat/${chat.userPublicId}`
                 const isActive = pathname === href;
 
                 return (

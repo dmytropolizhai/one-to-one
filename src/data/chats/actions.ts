@@ -40,7 +40,7 @@ export async function getClientChats(): Promise<ClientChat[]> {
 
         return {
             id: chat.id,
-            publicId: chat.publicId,
+            userPublicId: otherParticipant?.publicId || "",
             name: otherParticipant?.name || "Unknown User",
             lastMessage: lastMessage?.content || "No messages yet",
             initial: otherParticipant?.name?.charAt(0).toUpperCase() || "?",
@@ -90,7 +90,7 @@ async function connectWithUser(publicId: string): Promise<string> {
         }
     });
 
-    return newChat.publicId;
+    return targetUser.publicId;
 }
 
 export async function connectWithUserAction(
@@ -115,13 +115,26 @@ export async function connectWithUserAction(
     }
 }
 
-export async function getChat(chatPublicId: string) {
+export async function getChat(otherUserPublicId: string) {
     const me = await getMe();
     if (!me) return null;
 
-    const chat = await prisma.chat.findUnique({
+    const otherUser = await prisma.user.findUnique({
+        where: { publicId: otherUserPublicId }
+    });
+
+    if (!otherUser) return null;
+
+    if (me.id === otherUser.id) {
+        return null;
+    }
+
+    const chat = await prisma.chat.findFirst({
         where: {
-            publicId: chatPublicId
+            AND: [
+                { participants: { some: { userId: me.id } } },
+                { participants: { some: { userId: otherUser.id } } }
+            ]
         },
         include: {
             participants: {
@@ -132,14 +145,9 @@ export async function getChat(chatPublicId: string) {
         }
     });
 
-    if (!chat) return null;
-
-    const isParticipant = chat.participants.some(p => p.userId === me.id);
-    const otherParticipant = chat.participants.find(p => p.userId !== me.id)?.user ?? null;
-
     return {
         ...chat,
-        isParticipant,
-        otherUser: otherParticipant
+        isParticipant: !!chat,
+        otherUser
     };
 }
