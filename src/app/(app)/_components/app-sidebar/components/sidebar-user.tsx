@@ -1,6 +1,7 @@
 import { SidebarMenuButton } from "@/shared/components/ui/sidebar"
 import { getMe } from "@/data/users/actions"
-import { User2, Settings } from "lucide-react"
+import { User2 } from "lucide-react"
+import { SettingsPanel } from "@/shared/components/panels/settings"
 
 export async function SidebarUser() {
     const me = await getMe()
@@ -19,7 +20,7 @@ export async function SidebarUser() {
                 <span className="truncate font-bold text-foreground/90">{me.name}</span>
                 <span className="truncate text-[10px] text-muted-foreground/70 font-medium uppercase tracking-wider">{me.email}</span>
             </div>
-            <Settings className="size-4 text-muted-foreground/40 ml-auto group-hover:text-muted-foreground transition-colors" />
+            <SettingsPanel />
         </SidebarMenuButton>
     )
 }
