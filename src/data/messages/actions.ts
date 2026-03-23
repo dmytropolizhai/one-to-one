@@ -21,23 +21,19 @@ export async function getMessages(chatId: number) {
     }
 }
 
-export async function sendMessage(content: string, chatPublicId: string) {
+export async function sendMessage(content: string, chatId: number) {
     try {
         const user = await getMe();
         if (!user) {
             throw new Error("Unauthorized");
         }
 
-        const chat = await prisma.chat.findFirst({
-            where: {
-                publicId: chatPublicId,
-                participants: {
-                    some: { userId: user.id }
-                }
-            }
+        const chat = await prisma.chat.findUnique({
+            where: { id: chatId },
+            include: { participants: true }
         });
 
-        if (!chat) {
+        if (!chat || !chat.participants.some(p => p.userId === user.id)) {
             throw new Error("Chat not found or access denied");
         }
 
