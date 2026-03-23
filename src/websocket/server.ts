@@ -19,17 +19,17 @@ io.on("connection", (socket) => {
     console.log("Client connected:", socket.id);
 
     socket.on("joinChat", (chatId) => {
-        socket.join(chatId);
+        socket.join(chatId.toString());
         console.log(`Socket ${socket.id} joined room: ${chatId}`);
     });
 
     socket.on("leaveChat", (chatId) => {
-        socket.leave(chatId);
+        socket.leave(chatId.toString());
         console.log(`Socket ${socket.id} left room: ${chatId}`);
     });
 
     socket.on("relayMessage", (payload) => {
-        io.to(payload.chatId).emit("message", payload);
+        io.to(payload.chatId.toString()).emit("message", payload);
         console.log(`Relaying message ${payload.message.id} to room ${payload.chatId}`);
     });
 
