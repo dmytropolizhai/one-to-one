@@ -5,7 +5,7 @@ import { prisma } from "@/shared/lib/prisma";
 import { cookies } from "next/headers";
 import { ActionState } from "@/data/types";
 import { generateOTP, hashOtp } from "@/shared/lib/otp";
-import { sendOtpEmail } from "@/shared/lib/email";
+import { sendOTPEmail } from "@/shared/lib/email";
 
 export type CreateUserState = ActionState<CreateUserData>;
 
@@ -96,7 +96,7 @@ export async function requestOtpAction(
     });
 
     try {
-        await sendOtpEmail(email, code);
+        await sendOTPEmail(email, code);
     } catch (error) {
         console.error("Failed to send OTP:", error);
         return { success: false, message: "Failed to send OTP. Please try again." };
