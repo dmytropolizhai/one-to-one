@@ -23,33 +23,37 @@ export async function createUserAction(
         };
     }
 
-    // Validate if user already exists
-    const existingUser = await prisma.user.findUnique({
-        where: {
-            "email": parsed.data.email,
-        }
-    });
-    if (existingUser) {
-        return { success: false, message: "User already exists." };
-    }
-
-    // Create user
-    const user = await prisma.user.create({
-        data: {
-            name: parsed.data.name,
-            email: parsed.data.email,
-        }
-    });
-
-    if (user) {
-        const cookieStore = await cookies();
-        cookieStore.set("user_id", user.id.toString(), {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
+    try {
+        // Validate if user already exists
+        const existingUser = await prisma.user.findUnique({
+            where: {
+                "email": parsed.data.email,
+            }
         });
-        return { success: true, message: "User created successfully." };
+        if (existingUser) {
+            return { success: false, message: "User already exists." };
+        }
+
+        // Create user
+        const user = await prisma.user.create({
+            data: {
+                name: parsed.data.name,
+                email: parsed.data.email,
+            }
+        });
+
+        if (user) {
+            const cookieStore = await cookies();
+            cookieStore.set("user_id", user.id.toString(), {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/",
+            });
+            return { success: true, message: "User created successfully." };
+        }
+    } catch (error) {
+        return { success: false, message: "Something went wrong." };
     }
 
     return { success: false, message: "Failed to create user." };
@@ -80,9 +84,13 @@ export async function requestOtpAction(
         return { success: false, message: "Email is required." };
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
-        return { success: false, message: "User not found." };
+    try {
+        const user = await prisma.user.findUnique({ where: { email } });
+        if (!user) {
+            return { success: false, message: "User not found." };
+        }
+    } catch (error) {
+        return { success: false, message: "Failed to find user." };
     }
 
     const code = generateOTP();
