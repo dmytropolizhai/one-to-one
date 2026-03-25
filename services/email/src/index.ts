@@ -54,6 +54,10 @@ app.post("/send-otp", async (req: Request, res: Response): Promise<void> => {
     }
 });
 
+app.get("/health", (req: Request, res: Response) => {
+    res.status(200).json({ status: "healthy" });
+});
+
 const PORT = Number(process.env.PORT ?? 3002);
 app.listen(PORT, () => {
     console.log(`Email service running on http://localhost:${PORT}`);
