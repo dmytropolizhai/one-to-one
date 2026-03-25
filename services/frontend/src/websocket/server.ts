@@ -6,7 +6,13 @@ import type {
 } from "@/websocket/events";
 
 const PORT = Number(process.env.SOCKET_PORT ?? 3001);
-const httpServer = createServer();
+const httpServer = createServer((req, res) => {
+    if (req.url === "/health") {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ status: "healthy" }));
+        return;
+    }
+});
 
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
     cors: {
