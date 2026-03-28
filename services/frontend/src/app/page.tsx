@@ -1,20 +1,14 @@
-import { HeroContent } from "./_components/hero/content";
-import { HeroPreview } from "./_components/hero/preview";
-import { LearnMoreSection } from "./_components/learn-more";
+import { HeroSection } from "./_components/sections/hero";
+import dynamic from "next/dynamic";
 
-
+const RevealSection = dynamic(() => import("./_components/sections/reveal").then((mod) => mod.RevealSection))
+const LearnMoreSection = dynamic(() => import("./_components/sections/learn-more").then((mod) => mod.LearnMoreSection))
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background">
-      <section className="relative overflow-hidden">
-        <div className="container mx-auto px-6 py-24 md:py-32">
-          <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-2">
-            <HeroContent />
-            <HeroPreview />
-          </div>
-        </div>
-      </section>
+    <main className="relative flex min-h-screen w-full flex-col items-center justify-center bg-background">
+      <HeroSection />
+      <RevealSection />
       <LearnMoreSection />
     </main>
   );
